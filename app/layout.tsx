@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link"; // Import this to allow fast page switching
 import Navbar from "@/app/ui/navbar";
 import "@/app/ui/globals.css";
+import { inter } from "./ui/fonts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-white`}
+        className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-white`}
       >
         <Navbar />
         {/* The actual page content */}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link"; // Import this to allow fast page switching
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +26,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-white`}
       >
-        {children}
+        {/* Navigation Bar - Visible on every page */}
+        <nav className="flex items-center justify-between px-8 py-4 bg-slate-900 border-b border-slate-800">
+          <div className="font-bold text-xl text-blue-500">MyDevApp</div>
+          <div className="flex gap-6">
+            <Link href="/" className="hover:text-blue-400 transition-colors">
+              Home
+            </Link>
+            <Link
+              href="/dashboard"
+              className="hover:text-blue-400 transition-colors"
+            >
+              Dashboard
+            </Link>
+          </div>
+        </nav>
+
+        {/* The actual page content */}
+        <main className="min-h-screen">{children}</main>
+
+        {/* Simple Footer */}
+        <footer className="p-8 border-t border-slate-800 text-center text-slate-500 text-sm">
+          © 2025 Prepared for Cousin's Tech Co.
+        </footer>
       </body>
     </html>
   );

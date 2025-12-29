@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link"; // Import this to allow fast page switching
+import Navbar from "@/app/ui/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,22 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-white`}
       >
-        {/* Navigation Bar - Visible on every page */}
-        <nav className="flex items-center justify-between px-8 py-4 bg-slate-900 border-b border-slate-800">
-          <div className="font-bold text-xl text-blue-500">MyDevApp</div>
-          <div className="flex gap-6">
-            <Link href="/" className="hover:text-blue-400 transition-colors">
-              Home
-            </Link>
-            <Link
-              href="/dashboard"
-              className="hover:text-blue-400 transition-colors"
-            >
-              Dashboard
-            </Link>
-          </div>
-        </nav>
-
+        <Navbar />
         {/* The actual page content */}
         <main className="min-h-screen">{children}</main>
 

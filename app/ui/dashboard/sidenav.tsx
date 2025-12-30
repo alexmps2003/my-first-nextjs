@@ -1,9 +1,22 @@
+import NavLinks from "@/app/ui/dashboard/nav-links"; // The file you just made
+import Link from "next/link";
+import AcmeLogo from "@/app/ui/acme-logo";
+
 export default function SideNav() {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2 bg-gray-50">
-      <p>Side Navigation</p>
+      <Link
+        className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4"
+        href="/"
+      >
+        <div className="w-32 text-white">
+          <AcmeLogo />
+        </div>
+      </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-        {/* Navigation links will go here in Chapter 5 */}
+        {/* THIS IS THE MISSING PIECE */}
+        <NavLinks />
+        <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
       </div>
     </div>
   );

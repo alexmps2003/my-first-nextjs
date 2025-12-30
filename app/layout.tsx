@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link"; // Import this to allow fast page switching
-import Navbar from "@/app/ui/navbar";
+//import Navbar from "@/app/ui/navbar";
 import "@/app/ui/globals.css";
 import { inter } from "./ui/fonts";
 
@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-white`}
       >
-        <Navbar />
+        {/*<Navbar />*/}
         {/* The actual page content */}
         <main className="min-h-screen">{children}</main>
 

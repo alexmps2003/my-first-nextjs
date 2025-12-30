@@ -32,7 +32,7 @@ export default function RootLayout({
         <main className="min-h-screen">{children}</main>
 
         <footer className="p-8 border-t text-center text-slate-500 text-sm">
-          © 2025 Prepared for Cousin's Tech Co.
+          © 2025 Acme Inc. All rights reserved.
         </footer>
       </body>
     </html>

@@ -9,14 +9,14 @@ import {
 } from "@/app/lib/data";
 
 export default async function Page() {
-  const revenue = await fetchRevenue(); // Fetches chart data [cite: 550, 555]
-  const latestInvoices = await fetchLatestInvoices(); // Fetches last 5 invoices [cite: 586, 595]
+  const revenue = await fetchRevenue();
+  const latestInvoices = await fetchLatestInvoices();
   const {
     numberOfInvoices,
     numberOfCustomers,
     totalPaidInvoices,
     totalPendingInvoices,
-  } = await fetchCardData(); // Fetches count and sum data [cite: 643, 644]
+  } = await fetchCardData();
 
   return (
     <main>
@@ -33,7 +33,7 @@ export default async function Page() {
           type="customers"
         />
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
         <RevenueChart revenue={revenue} />
         <LatestInvoices latestInvoices={latestInvoices} />
       </div>

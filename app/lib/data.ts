@@ -6,6 +6,7 @@ import {
   LatestInvoiceRaw,
   Revenue,
 } from "./definitions";
+import { formatCurrency } from "./utils";
 
 export async function fetchRevenue() {
   try {
@@ -26,7 +27,11 @@ export async function fetchLatestInvoices() {
       ORDER BY invoices.date DESC
       LIMIT 5`;
 
-    return data.rows;
+    const latestInvoices = data.rows.map((invoice) => ({
+      ...invoice,
+      amount: formatCurrency(invoice.amount),
+    }));
+    return latestInvoices;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch the latest invoices.");
@@ -50,8 +55,8 @@ export async function fetchCardData() {
 
     const numberOfInvoices = Number(data[0].rows[0].count ?? "0");
     const numberOfCustomers = Number(data[1].rows[0].count ?? "0");
-    const totalPaidInvoices = data[2].rows[0].paid ?? "0";
-    const totalPendingInvoices = data[2].rows[0].pending ?? "0";
+    const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? 0);
+    const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? 0);
 
     return {
       numberOfCustomers,

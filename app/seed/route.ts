@@ -36,12 +36,15 @@ async function seedInvoices() {
       date DATE NOT NULL
     );
   `;
+
+  // Delete existing invoices first
+  await client.sql`DELETE FROM invoices;`;
+
   return Promise.all(
     invoices.map(
       (invoice) => client.sql`
         INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date})
-        ON CONFLICT (id) DO NOTHING;
+        VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date});
       `
     )
   );
@@ -56,12 +59,15 @@ async function seedCustomers() {
       image_url VARCHAR(255) NOT NULL
     );
   `;
+
+  // Delete existing customers first
+  await client.sql`DELETE FROM customers;`;
+
   return Promise.all(
     customers.map(
       (customer) => client.sql`
         INSERT INTO customers (id, name, email, image_url)
-        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
-        ON CONFLICT (id) DO NOTHING;
+        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url});
       `
     )
   );
@@ -74,12 +80,15 @@ async function seedRevenue() {
       revenue INT NOT NULL
     );
   `;
+
+  // Delete existing revenue first
+  await client.sql`DELETE FROM revenue;`;
+
   return Promise.all(
     revenue.map(
       (rev) => client.sql`
         INSERT INTO revenue (month, revenue)
-        VALUES (${rev.month}, ${rev.revenue})
-        ON CONFLICT (month) DO NOTHING;
+        VALUES (${rev.month}, ${rev.revenue});
       `
     )
   );

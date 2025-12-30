@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link"; // Import this to allow fast page switching
-//import Navbar from "@/app/ui/navbar";
+import Link from "next/link";
 import "@/app/ui/globals.css";
 import { inter } from "./ui/fonts";
 
@@ -28,14 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-white`}
+        className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/*<Navbar />*/}
-        {/* The actual page content */}
         <main className="min-h-screen">{children}</main>
 
-        {/* Simple Footer */}
-        <footer className="p-8 border-t border-slate-800 text-center text-slate-500 text-sm">
+        <footer className="p-8 border-t text-center text-slate-500 text-sm">
           © 2025 Prepared for Cousin's Tech Co.
         </footer>
       </body>

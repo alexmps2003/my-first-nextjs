@@ -3,6 +3,14 @@ export type Revenue = {
   revenue: number;
 };
 
+// User shape mirrors the users table
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+};
+
 export type LatestInvoice = {
   id: string;
   name: string;

@@ -4,36 +4,62 @@ import { z } from "zod";
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { CreateInvoice } from "../ui/invoices/buttons";
 
+export type InvoiceFormState = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string;
+};
+
+// 1. Define the Schema with friendly error messages
 const FormSchema = z.object({
-  customerId: z.string(),
-  amount: z.coerce.number(),
+  id: z.string(),
+  customerId: z.string().min(1, { message: "Please select a customer." }),
+  amount: z.coerce
+    .number()
+    .gt(0, { message: "Please enter an amount greater than $0." }),
   status: z.enum(["pending", "paid"]),
+  date: z.string(),
 });
 
-export async function createInvoice(formData: FormData) {
-  const { customerId, amount, status } = FormSchema.parse({
+const CreateInvoice = FormSchema.omit({ id: true, date: true });
+
+export async function createInvoice(
+  _prevState: InvoiceFormState,
+  formData: FormData
+) {
+  const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
     status: formData.get("status"),
   });
 
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing fields. Failed to create invoice.",
+    } satisfies InvoiceFormState;
+  }
+
+  // 6. Prepare data for insertion
+  const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split("T")[0];
 
-  // Wrap the database call so the app doesn't crash on timeout
   try {
     await sql`
       INSERT INTO invoices (customer_id, amount, status, date)
       VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
     `;
   } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to Create Invoice.");
+    return {
+      message: "Database error. Failed to create invoice.",
+    } satisfies InvoiceFormState;
   }
 
-  // These MUST be outside the try/catch block
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
 }

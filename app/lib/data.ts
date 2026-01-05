@@ -1,12 +1,8 @@
 import { sql } from "@vercel/postgres";
-import {
-  CustomerField,
-  InvoiceForm,
-  InvoicesTable,
-  LatestInvoiceRaw,
-  Revenue,
-} from "./definitions";
+import { CustomerField, InvoicesTable, Revenue } from "./definitions";
 import { formatCurrency } from "./utils";
+
+const ITEMS_PER_PAGE = 6;
 
 export async function fetchRevenue() {
   try {
@@ -22,23 +18,58 @@ export async function fetchRevenue() {
   }
 }
 
-export async function fetchLatestInvoices() {
+export async function fetchLatestInvoices(query = "", currentPage = 1) {
   try {
-    const data = await sql<LatestInvoiceRaw>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const search = `%${query}%`;
+
+    const data = await sql<InvoicesTable>`
+      SELECT invoices.id, invoices.amount, invoices.date, invoices.status, customers.name, customers.email, customers.image_url
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
+      WHERE customers.name ILIKE ${search} OR customers.email ILIKE ${search}
       ORDER BY invoices.date DESC
-      LIMIT 5`;
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`;
 
-    const latestInvoices = data.rows.map((invoice) => ({
-      ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
-    return latestInvoices;
+    return data.rows;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch the latest invoices.");
+  }
+}
+
+// /app/lib/data.ts
+export async function fetchCustomers() {
+  try {
+    const data = await sql<CustomerField>`
+      SELECT
+        id,
+        name
+      FROM customers
+      ORDER BY name ASC
+    `;
+
+    const customers = data.rows;
+    return customers;
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw new Error("Failed to fetch all customers.");
+  }
+}
+
+export async function fetchInvoicesPages(query = "") {
+  try {
+    const search = `%${query}%`;
+    const data = await sql`SELECT COUNT(*) FROM invoices
+      JOIN customers ON invoices.customer_id = customers.id
+      WHERE customers.name ILIKE ${search} OR customers.email ILIKE ${search}
+    `;
+
+    const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch total number of invoices.");
   }
 }
 

@@ -7,6 +7,17 @@ export const formatCurrency = (amount: number) => {
   });
 };
 
+export const formatDateToLocal = (dateStr: string, locale = "en-US") => {
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return "Invalid date";
+
+  return new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+};
+
 export const generateYAxis = (revenue: Revenue[]) => {
   const yAxisLabels = [];
   const highestRevenue = Math.max(...revenue.map((month) => month.revenue));
@@ -19,4 +30,32 @@ export const generateYAxis = (revenue: Revenue[]) => {
   }
 
   return { yAxisLabels, topLabel };
+};
+
+export const generatePagination = (currentPage: number, totalPages: number) => {
+  // If total pages are 7 or less, show all pages without ellipsis
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  // If current page is among the first 3 pages, show first 3, ellipsis, and last 2
+  if (currentPage <= 3) {
+    return [1, 2, 3, "...", totalPages - 1, totalPages];
+  }
+
+  // If current page is among the last 3 pages, show first 2, ellipsis, and last 3
+  if (currentPage >= totalPages - 2) {
+    return [1, 2, "...", totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  // If current page is in the middle, show first, ellipsis, middle pages, ellipsis, last
+  return [
+    1,
+    "...",
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    "...",
+    totalPages,
+  ];
 };

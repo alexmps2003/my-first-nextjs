@@ -8,12 +8,12 @@ export type LatestInvoice = {
   name: string;
   image_url: string;
   email: string;
-  amount: string;
+  amount: number;
+  date: string;
+  status: "pending" | "paid";
 };
 
-export type LatestInvoiceRaw = Omit<LatestInvoice, "amount"> & {
-  amount: number;
-};
+export type LatestInvoiceRaw = LatestInvoice;
 
 export type InvoiceForm = {
   id: string;

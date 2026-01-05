@@ -2,13 +2,11 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import Image from "next/image";
 import { lusitana } from "@/app/ui/fonts";
-import { LatestInvoice } from "@/app/lib/definitions";
+import { fetchLatestInvoices } from "@/app/lib/data";
+import { formatCurrency } from "@/app/lib/utils";
 
-export default function LatestInvoices({
-  latestInvoices,
-}: {
-  latestInvoices: LatestInvoice[];
-}) {
+export default async function LatestInvoices() {
+  const latestInvoices = await fetchLatestInvoices();
   return (
     <div className="flex w-full flex-col">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
@@ -45,7 +43,7 @@ export default function LatestInvoices({
                 <p
                   className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
                 >
-                  {invoice.amount}
+                  {formatCurrency(invoice.amount)}
                 </p>
               </div>
             );

@@ -48,7 +48,7 @@ export async function authenticate(
 }
 
 export async function createInvoice(
-  _prevState: InvoiceFormState,
+  prevState: InvoiceFormState,
   formData: FormData
 ) {
   const validatedFields = CreateInvoice.safeParse({
@@ -82,4 +82,7 @@ export async function createInvoice(
 
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
+
+  // revalidatePath("/dashboard/invoices");
+  // redirect("/dashboard/invoices");
 }
